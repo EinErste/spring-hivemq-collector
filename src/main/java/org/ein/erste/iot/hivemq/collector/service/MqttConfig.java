@@ -29,15 +29,6 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MqttConfig {
     private MqttMessageConsumer messageConsumer;
-
-    @Bean
-    public IntegrationFlow mqttInFlow(MessageProducerSupport mqttInbound) {
-        return IntegrationFlow.from(mqttInbound)
-                .transform(p -> p)
-                .handle(message -> messageConsumer.consume(message.getPayload().toString()))
-                .get();
-    }
-
     @Bean
     public MqttPahoClientFactory mqttClientFactory(@Value("${mqtt.domain}") String domain,
                                                    @Value("${mqtt.username}") String username,
@@ -50,6 +41,14 @@ public class MqttConfig {
         options.setAutomaticReconnect(true);
         factory.setConnectionOptions(options);
         return factory;
+    }
+
+    @Bean
+    public IntegrationFlow mqttInFlow(MessageProducerSupport mqttInbound) {
+        return IntegrationFlow.from(mqttInbound)
+                .transform(p -> p)
+                .handle(message -> messageConsumer.consume(message.getPayload().toString()))
+                .get();
     }
 
     @Bean

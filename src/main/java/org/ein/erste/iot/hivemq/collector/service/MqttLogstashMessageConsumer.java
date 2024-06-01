@@ -28,7 +28,7 @@ public class MqttLogstashMessageConsumer implements MqttMessageConsumer {
             os.writeBytes(s + "\n");
             os.flush();
         } catch (Exception e){
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
